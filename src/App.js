@@ -7,45 +7,40 @@ import {
   List,
   Image
 } from "semantic-ui-react";
+import BookContainer from './BookContainer';
 
-function App() {
-  return (
-    <div>
-      <Menu inverted>
-        <Menu.Item header>Bookliker</Menu.Item>
-      </Menu>
-      <main>
-        <Menu vertical inverted>
-          <Menu.Item as={"a"} onClick={e => console.log("book clicked!")}>
-            Book title
-          </Menu.Item>
+class App extends React.Component {
+
+  state = {
+    bookList: []
+  };
+
+  componentDidMount() {
+    fetch("http://localhost:3000/books")
+    .then(r => r.json())
+    .then((bookArray) => {
+      this.setState({
+        bookList: bookArray
+      })
+    })
+  };
+  
+  render() {
+    // console.log(this.state)
+    let {bookList} = this.state
+    return (
+      <div>
+        <Menu inverted>
+          <Menu.Item header>Bookliker</Menu.Item>
         </Menu>
-        <Container text>
-          <Header>Book title</Header>
-          <Image
-            src="https://react.semantic-ui.com/images/wireframe/image.png"
-            size="small"
+        <main>
+          <BookContainer 
+            books={bookList}
           />
-          <p>Book description</p>
-          <Button
-            color="red"
-            content="Like"
-            icon="heart"
-            label={{
-              basic: true,
-              color: "red",
-              pointing: "left",
-              content: "2,048"
-            }}
-          />
-          <Header>Liked by</Header>
-          <List>
-            <List.Item icon="user" content="User name" />
-          </List>
-        </Container>
-      </main>
-    </div>
-  );
-}
+        </main>
+      </div>
+    )
+  };
+};
 
 export default App;
